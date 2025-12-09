@@ -41,7 +41,7 @@ export default function Home() {
   }, [shirts.length]);
 
   return (
-    <main className="min-h-screen bg-gradient-to-r from-blue-100 to-orange-100 flex flex-col">
+    <main className="min-h-screen bg-linear-to-r from-blue-100 to-orange-100 flex flex-col">
       {/* NAVBAR */}
       <nav className="flex items-center justify-between px-10 py-6">
         <div className="text-xl font-semibold flex items-center gap-2">
@@ -50,9 +50,9 @@ export default function Home() {
         </div>
 
         <div className="hidden md:flex items-center gap-8 text-gray-700">
-          <span className="cursor-pointer hover:text-black">Services ▾</span>
+          <span className="cursor-pointer hover:text-black">Services </span>
           <span className="cursor-pointer hover:text-black">Help</span>
-          <span className="cursor-pointer hover:text-black">Pricing ▾</span>
+          <span className="cursor-pointer hover:text-black">Pricing </span>
           <span className="cursor-pointer hover:text-black">Recyclers</span>
         </div>
 
@@ -101,6 +101,7 @@ export default function Home() {
               alt="clean shirt"
               width={550}
               height={550}
+              priority
               className="drop-shadow-lg rounded-xl animate-fade"
             />
           </div>
@@ -144,7 +145,7 @@ export default function Home() {
           Reserve Service →
         </Button>
       </div>
-      <div className=" p-4">
+      <div className=" p-4 ">
         {" "}
         <BranchMapView
           branches={sampleBranches}

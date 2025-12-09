@@ -1,22 +1,21 @@
 "use client";
+
 import "leaflet/dist/leaflet.css";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import L, { LatLngTuple } from "leaflet";
-import Image from "next/image";
-import "leaflet/dist/leaflet.css";
+import L, { LatLngTuple, Map as LeafletMap } from "leaflet";
 import { Button } from "@/components/ui/button";
 
-/* Fix default marker icons in many bundlers */
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+/* ---------------------- Fix Marker Icons (No ANY used) ---------------------- */
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: "/leaflet/marker-icon-2x.png",
-  iconUrl: "/leaflet/marker-icon.png",
-  shadowUrl: "/leaflet/marker-shadow.png",
+  iconRetinaUrl: "/mark.png",
+  iconUrl: "/mark.png",
+  shadowUrl: "/mark.png",
 });
 
-type Branch = {
+/* ----------------------------- Branch Type ----------------------------- */
+export type Branch = {
   id: string | number;
   name: string;
   address?: string;
@@ -26,18 +25,26 @@ type Branch = {
   hours?: string;
 };
 
+interface MapAutoOpenPopupProps {
+  selectedId: string | number | null;
+  branches: Branch[];
+}
+
+/* --------------------------- Main Component ---------------------------- */
 export default function BranchMapView({
   branches,
-  initialCenter = [23.8103, 90.4125], // default Dhaka
+  initialCenter = [23.8103, 90.4125],
   initialZoom = 12,
 }: {
   branches: Branch[];
   initialCenter?: LatLngTuple;
   initialZoom?: number;
 }) {
-  const mapRef = useRef<L.Map | null>(null);
+  const mapRef = useRef<LeafletMap | null>(null);
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const [query, setQuery] = useState("");
+
+  /* Filter branches */
   const filtered = useMemo(
     () =>
       branches.filter((b) =>
@@ -48,17 +55,17 @@ export default function BranchMapView({
     [branches, query]
   );
 
-  // Fit to bounds after mount or when branches change
+  /* Fit markers into view */
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !filtered.length) return;
+    if (!map || filtered.length === 0) return;
 
     const bounds = L.latLngBounds(
       filtered.map((b) => [b.lat, b.lng] as LatLngTuple)
     );
-    // small timeout to ensure map container is measured properly (fixes SSR/hydration and layout change issues)
+
     const t = setTimeout(() => {
-      map.invalidateSize(); // critical to avoid clipped/shifted maps
+      map.invalidateSize();
       if (filtered.length === 1) {
         map.setView(
           [filtered[0].lat, filtered[0].lng],
@@ -72,46 +79,44 @@ export default function BranchMapView({
     return () => clearTimeout(t);
   }, [filtered, initialZoom]);
 
-  // when selectedId changes, pan & open popup
+  /* Pan when selecting branch */
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || selectedId == null) return;
+    if (!map || !selectedId) return;
+
     const found = branches.find((b) => b.id === selectedId);
     if (!found) return;
+
     map.setView([found.lat, found.lng], Math.max(initialZoom, 14), {
       animate: true,
     });
   }, [selectedId, branches, initialZoom]);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-4 h-[720px]">
-      {/* Sidebar */}
+    <div className="flex flex-col lg:flex-row w-full  gap-4 h-[620px]">
+      {/* ----------------------- Sidebar ----------------------- */}
       <aside className="w-full lg:w-96 bg-white rounded-xl shadow p-4 flex flex-col">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Branches</h3>
-          <div className="text-sm text-gray-500">{filtered.length} shown</div>
-        </div>
+        <h3 className="text-lg font-semibold flex justify-between">
+          Branches
+          <span className="text-sm text-gray-500">{filtered.length} shown</span>
+        </h3>
 
-        <div className="mt-3">
-          <input
-            className="w-full px-3 py-2 border rounded-md text-sm"
-            placeholder="Search branch name or address..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-        </div>
+        <input
+          className="w-full px-3 py-2 border rounded-md text-sm mt-3"
+          placeholder="Search branch name or address..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
 
-        <div className="mt-4 overflow-y-auto flex-1">
+        <div className="mt-4 overflow-y-auto px-2 py-2 flex-1">
           {filtered.length === 0 ? (
-            <div className="text-sm text-gray-500 p-4">
-              No branches match your search.
-            </div>
+            <div className="text-sm text-gray-500 p-4">No branches found.</div>
           ) : (
             filtered.map((b) => (
               <div
                 key={b.id}
                 onClick={() => setSelectedId(b.id)}
-                className={`p-3 rounded-lg cursor-pointer hover:bg-gray-50 flex items-start gap-3 ${
+                className={`p-3 rounded-lg cursor-pointer hover:bg-gray-50 flex items-start mt-2 gap-3 ${
                   selectedId === b.id
                     ? "ring-2 ring-indigo-300 bg-indigo-50"
                     : ""
@@ -121,18 +126,17 @@ export default function BranchMapView({
                   <div className="font-medium">{b.name}</div>
                   <div className="text-sm text-gray-500">{b.address}</div>
                   <div className="text-xs text-gray-400 mt-1">
-                    {b.phone ? `${b.phone} · ` : ""}
-                    {b.hours ?? "Hours N/A"}
+                    {b.phone && `${b.phone} ·`}
+                    {b.hours ?? " Hours N/A"}
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    size="sm"
-                    onClick={() => window.open(`tel:${b.phone ?? ""}`)}
-                  >
-                    Call
-                  </Button>
-                </div>
+
+                <Button
+                  size="sm"
+                  onClick={() => window.open(`tel:${b.phone ?? ""}`)}
+                >
+                  Call
+                </Button>
               </div>
             ))
           )}
@@ -142,9 +146,10 @@ export default function BranchMapView({
           <Button
             variant="outline"
             onClick={() => {
-              const map = mapRef.current;
-              if (!map) return;
-              map.setView(initialCenter, initialZoom, { animate: true });
+              if (!mapRef.current) return;
+              mapRef.current.setView(initialCenter, initialZoom, {
+                animate: true,
+              });
             }}
           >
             Reset view
@@ -163,21 +168,19 @@ export default function BranchMapView({
         </div>
       </aside>
 
-      {/* Map */}
+      {/* ----------------------- Map ----------------------- */}
       <div className="flex-1 rounded-xl overflow-hidden shadow">
         <MapContainer
-          whenCreated={(m) => (mapRef.current = m)}
+          ref={mapRef}
           center={initialCenter}
           zoom={initialZoom}
-          scrollWheelZoom={false} // prevents accidental page scroll/zoom
+          scrollWheelZoom={false}
           className="w-full h-full"
-          style={{ minHeight: 400 }}
         >
           <TileLayer
-            attribution='&copy; <a href="https://carto.com/">Carto</a>'
-            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-
           {filtered.map((b) => (
             <Marker
               key={b.id}
@@ -190,67 +193,58 @@ export default function BranchMapView({
                 <div className="max-w-xs">
                   <div className="font-semibold">{b.name}</div>
                   <div className="text-sm text-gray-600">{b.address}</div>
+
                   {b.phone && (
-                    <div className="mt-2">
-                      <a
-                        href={`tel:${b.phone}`}
-                        className="text-indigo-600 text-sm"
-                      >
-                        Call: {b.phone}
-                      </a>
-                    </div>
+                    <a
+                      href={`tel:${b.phone}`}
+                      className="text-indigo-600 text-sm mt-2 block"
+                    >
+                      Call: {b.phone}
+                    </a>
                   )}
                 </div>
               </Popup>
             </Marker>
           ))}
-          <MapAutoOpenPopup selectedId={selectedId} branches={branches} />
         </MapContainer>
       </div>
     </div>
   );
 }
 
-/* Helper component: opens popup for selected marker (works by finding layer and opening popup). */
-function MapAutoOpenPopup({
+/* ------------------ Auto-open Popup Component (Typed) ------------------ */
+export function MapAutoOpenPopup({
   selectedId,
   branches,
-}: {
-  selectedId: string | number | null;
-  branches: Branch[];
-}) {
+}: MapAutoOpenPopupProps) {
   const map = useMap();
 
   useEffect(() => {
-    if (!map) return;
-    // invalidate size to fix cases where parent changing size leaves map unresponsive
+    if (!map || selectedId == null) return;
+
     map.invalidateSize();
 
-    if (selectedId == null) return;
-
-    // find the marker layer by comparing latlngs
     const target = branches.find((b) => b.id === selectedId);
     if (!target) return;
 
-    // open popup for matching layer
-    // Leaflet stores layers; find marker with same latlng
-    let foundLayer: L.Layer | null = null;
-    map.eachLayer((layer: any) => {
-      if (!layer.getLatLng) return;
-      const latlng = layer.getLatLng();
-      if (!latlng) return;
-      if (latlng.lat === target.lat && latlng.lng === target.lng) {
-        foundLayer = layer;
+    let targetMarker: Marker | null = null;
+    console.log(targetMarker);
+    map.eachLayer((layer) => {
+      // SAFE TYPE NARROWING
+      if (layer instanceof L.Marker) {
+        const latlng = layer.getLatLng();
+        if (latlng.lat === target.lat && latlng.lng === target.lng) {
+          targetMarker = layer;
+        }
       }
     });
 
-    if (foundLayer && (foundLayer as any).openPopup) {
-      (foundLayer as any).openPopup();
+    if (targetMarker) {
+      targetMarker.openPopup();
     } else {
-      // fallback: pan to location
       map.panTo([target.lat, target.lng]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedId, map]);
+  }, [selectedId, branches, map]);
+
   return null;
 }

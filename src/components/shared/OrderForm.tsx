@@ -1,16 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { Button } from "@/components/ui/button";
+
+/* ---------------------- Branch Type ---------------------- */
+export type Branch = {
+  id: number | string;
+  name: string;
+};
+
+/* ---------------------- Form State Type ---------------------- */
+type OrderFormState = {
+  name: string;
+  phone: string;
+  address: string;
+  branchId: number | string | "";
+  serviceType: string;
+  date: string;
+  time: string;
+  notes: string;
+};
+
+/* ---------------------- Props Type ---------------------- */
+type OrderFormProps = {
+  branches: Branch[];
+  selectedBranchId?: number | string | null;
+};
 
 export default function OrderForm({
   branches,
   selectedBranchId,
-}: {
-  branches: { id: number | string; name: string }[];
-  selectedBranchId?: number | string | null;
-}) {
-  const [form, setForm] = useState({
+}: OrderFormProps) {
+  const [form, setForm] = useState<OrderFormState>({
     name: "",
     phone: "",
     address: "",
@@ -21,11 +42,13 @@ export default function OrderForm({
     notes: "",
   });
 
-  const handleChange = (e: any) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!form.name || !form.phone || !form.address || !form.serviceType) {
       alert("Please fill all required fields.");
@@ -36,7 +59,7 @@ export default function OrderForm({
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-orange-100 p-6">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-r from-blue-100 to-orange-100 p-6">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-6xl flex overflow-hidden">
         {/* Left Side */}
         <div className="hidden lg:flex w-1/2 bg-blue-500 text-white flex-col justify-center items-center p-10 space-y-6">
@@ -57,6 +80,7 @@ export default function OrderForm({
           <h2 className="text-3xl font-semibold mb-6">Place Your Order</h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Full Name */}
             <div>
               <label className="block mb-1 font-medium">Full Name *</label>
               <input
@@ -70,6 +94,7 @@ export default function OrderForm({
               />
             </div>
 
+            {/* Phone Number */}
             <div>
               <label className="block mb-1 font-medium">Phone Number *</label>
               <input
@@ -83,6 +108,7 @@ export default function OrderForm({
               />
             </div>
 
+            {/* Pickup Address */}
             <div>
               <label className="block mb-1 font-medium">Pickup Address *</label>
               <input
@@ -96,6 +122,7 @@ export default function OrderForm({
               />
             </div>
 
+            {/* Select Branch */}
             <div>
               <label className="block mb-1 font-medium">Select Branch *</label>
               <select
@@ -113,6 +140,7 @@ export default function OrderForm({
               </select>
             </div>
 
+            {/* Service Type */}
             <div>
               <label className="block mb-1 font-medium">Service Type *</label>
               <select
@@ -130,6 +158,7 @@ export default function OrderForm({
               </select>
             </div>
 
+            {/* Date & Time */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block mb-1 font-medium">Pickup Date *</label>
@@ -156,6 +185,7 @@ export default function OrderForm({
               </div>
             </div>
 
+            {/* Notes */}
             <div>
               <label className="block mb-1 font-medium">Additional Notes</label>
               <textarea
@@ -167,6 +197,7 @@ export default function OrderForm({
               />
             </div>
 
+            {/* Submit */}
             <Button
               type="submit"
               className="w-full mt-4 bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700"
