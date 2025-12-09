@@ -2,8 +2,20 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const shirts = ["/shirt.png", "/shirt2.png", "/shirt3.png"]; // add your images
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % shirts.length);
+    }, 5000); // 5 seconds
+
+    return () => clearInterval(interval);
+  }, [shirts.length]);
+
   return (
     <main className="min-h-screen bg-gradient-to-r from-blue-100 to-orange-100 flex flex-col">
       {/* NAVBAR */}
@@ -58,20 +70,23 @@ export default function Home() {
 
         {/* Center Shirt Image */}
         <div className="flex-1 relative">
-          <Image
-            src="/shirt.png"
-            alt="clean shirt"
-            width={550}
-            height={550}
-            className="drop-shadow-lg"
-          />
+        <div className="transition-all duration-700 ease-in-out">
+    <Image
+      key={current} // Smooth fade animation
+      src={shirts[current]}
+      alt="clean shirt"
+      width={550}
+      height={550}
+      className="drop-shadow-lg rounded-xl animate-fade"
+    />
+  </div>
 
           <p className="absolute -left-6 top-10 text-sm font-medium text-gray-700 bg-white/60 px-3 py-2 rounded-lg shadow">
             Tough stains? We’ll make your clothes flawless! ✨
           </p>
 
           <p className="absolute right-0 top-32 text-sm font-medium text-gray-700 bg-white/60 px-3 py-2 rounded-lg shadow">
-            We'll Handle Any Stain — Guaranteed Removal 🧼
+            We&apos;ll Handle Any Stain — Guaranteed Removal 🧼
           </p>
         </div>
 
