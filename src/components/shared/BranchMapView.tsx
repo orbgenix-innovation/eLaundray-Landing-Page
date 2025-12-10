@@ -7,6 +7,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L, { LatLngTuple, Map as LeafletMap } from "leaflet";
 import { Button } from "@/components/ui/button";
 import { MyLocationAndRoute } from "./MyLocationAndRoute";
+import Link from "next/link";
 
 /* ---------------------- Fix Marker Icons (No ANY used) ---------------------- */
 L.Icon.Default.mergeOptions({
@@ -104,7 +105,7 @@ export default function BranchMapView({
   return (
     <div className="flex flex-col lg:flex-row w-full  gap-4 h-[620px]">
       {/* ----------------------- Sidebar ----------------------- */}
-      <aside className="w-full lg:w-96 bg-white rounded-xl shadow p-4 flex flex-col">
+      <aside className="w-full lg:w-72 bg-white rounded-xl shadow p-4 flex flex-col">
         <h3 className="text-lg font-semibold flex justify-between">
           Branches
           <span className="text-sm text-gray-500">{filtered.length} shown</span>
@@ -117,7 +118,7 @@ export default function BranchMapView({
           onChange={(e) => setQuery(e.target.value)}
         />
 
-        <div className="mt-4 overflow-y-auto px-2 py-2 flex-1">
+        <div className=" overflow-y-auto px-2 py-2 flex-1">
           {filtered.length === 0 ? (
             <div className="text-sm text-gray-500 p-4">No branches found.</div>
           ) : (
@@ -125,27 +126,27 @@ export default function BranchMapView({
               <div
                 key={b.id}
                 onClick={() => setSelectedId(b.id)}
-                className={`p-3 rounded-lg cursor-pointer hover:bg-gray-50 flex items-start mt-2 gap-3 ${
+                className={`p-2 rounded-lg cursor-pointer hover:bg-gray-50 flex items-start mt-2 gap-3 ${
                   selectedId === b.id
                     ? "ring-2 ring-indigo-300 bg-indigo-50"
                     : ""
                 }`}
               >
                 <div className="flex-1">
-                  <div className="font-medium">{b.name}</div>
-                  <div className="text-sm text-gray-500">{b.address}</div>
+                  <div className="font-medium text-[12px]">{b.name}</div>
+                  <div className="text-[12px] text-gray-500">{b.address}</div>
                   <div className="text-xs text-gray-400 mt-1">
                     {b.phone && `${b.phone} ·`}
                     {b.hours ?? " Hours N/A"}
                   </div>
                 </div>
 
-                <Button
-                  size="sm"
+                {/* <button
                   onClick={() => window.open(`tel:${b.phone ?? ""}`)}
+                  className="text-[12px] px-1 py-1 bg-blue-700 rounded-md"
                 >
                   Call
-                </Button>
+                </button> */}
               </div>
             ))
           )}
@@ -205,15 +206,15 @@ export default function BranchMapView({
               <Popup>
                 <div className="max-w-xs">
                   <div className="font-semibold">{b.name}</div>
-                  <div className="text-sm text-gray-600">{b.address}</div>
+                  <div className="text-[12px] text-gray-600">{b.address}</div>
 
                   {b.phone && (
-                    <a
+                    <Link
                       href={`tel:${b.phone}`}
-                      className="text-indigo-600 text-sm mt-2 block"
+                      className="text-indigo-600 text-[12px] mt-2 block"
                     >
                       Call: {b.phone}
-                    </a>
+                    </Link>
                   )}
                 </div>
               </Popup>

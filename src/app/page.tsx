@@ -135,7 +135,7 @@ export default function Home() {
       </section>
 
       {/* Footer CTA */}
-      <div className="w-full bg-gray-900 text-white py-8 mt-16 px-10 md:px-20 flex justify-between items-center">
+      {/* <div className="w-full bg-gray-900 text-white py-8 mt-16 px-10 md:px-20 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <Image src="/avatars.png" width={150} height={40} alt="users" />
           <span className="text-lg">5k+ happy users</span>
@@ -144,9 +144,11 @@ export default function Home() {
         <Button className="bg-white text-gray-900 rounded-full px-8 py-6 shadow hover:bg-gray-200">
           Reserve Service →
         </Button>
-      </div>
-      <div className=" p-4 ">
-        {" "}
+      </div> */}
+      <div className="  p-4  ">
+        <p className=" text-center font-bold text-[24px] py-6 font-sans underline">
+          Choose Your Branches
+        </p>
         <BranchMapView
           branches={sampleBranches}
           initialCenter={[23.8103, 90.4125]}
