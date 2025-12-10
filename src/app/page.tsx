@@ -1,11 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useEffect, useState } from "react";
-import BranchMapView from "@/components/shared/BranchMapView";
-import OrderForm from "@/components/shared/OrderForm";
-import Footer from "@/components/shared/Footer";
+
+const BranchMapView = dynamic(() => import("@/components/shared/BranchMapView"), {
+  ssr: false,
+});
 
 const sampleBranches = [
   {
@@ -45,8 +47,7 @@ export default function Home() {
       {/* NAVBAR */}
       <nav className="flex items-center justify-between px-10 py-6">
         <div className="text-xl font-semibold flex items-center gap-2">
-          <span>E-Londri</span>
-          <span className="text-2xl">🌀</span>
+          <span>eLaundry</span>
         </div>
 
         <div className="hidden md:flex items-center gap-8 text-gray-700">
@@ -57,7 +58,7 @@ export default function Home() {
         </div>
 
         <Button className="rounded-full px-6 py-5 shadow bg-white text-gray-700 border hover:bg-gray-100">
-          Get the App <span className="ml-2">▶️</span>
+          Get the App
         </Button>
       </nav>
 

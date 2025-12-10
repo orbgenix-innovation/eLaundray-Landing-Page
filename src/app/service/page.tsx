@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, Truck, Clock, BadgeCheck } from "lucide-react";
+import { BadgeCheck, CheckCircle, Clock, Truck } from "lucide-react";
 import Link from "next/link";
 
 export default function ServicePage() {
@@ -13,7 +13,7 @@ export default function ServicePage() {
           href={"/"}
           className="text-2xl font-bold flex items-center gap-2 text-blue-900"
         >
-          E-Londri <span className="text-3xl">🌀</span>
+          eLaundry
         </Link>
 
         <div className="hidden md:flex items-center gap-8 text-gray-700">
@@ -24,7 +24,7 @@ export default function ServicePage() {
         </div>
 
         <Button className="rounded-full px-6 py-5 shadow bg-blue-600 text-white hover:bg-blue-700">
-          Get the App ▶️
+          Get the App
         </Button>
       </nav>
       {/* Hero Section */}

@@ -1,6 +1,7 @@
 "use client";
 
-import { Facebook, Instagram, Linkedin } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter } from "lucide-react";
+import Link from 'next/link';
 
 export default function Footer() {
   return (
@@ -8,9 +9,9 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* About */}
         <div>
-          <h3 className="text-xl font-bold mb-4">E-Londri</h3>
+          <h3 className="text-xl font-bold mb-4">eLaundry</h3>
           <p className="text-gray-200">
-            E-Londri is your trusted laundry service. We provide fast, reliable,
+            eLaundry is your trusted laundry service. We provide fast, reliable,
             and affordable laundry and dry-cleaning services at your doorstep.
           </p>
         </div>
@@ -72,9 +73,23 @@ export default function Footer() {
         {/* Contact */}
         <div>
           <h4 className="text-lg font-semibold mb-4">Contact Us</h4>
-          <p className="text-gray-200 mb-2">📞 +880 1XXXXXXXXX</p>
-          <p className="text-gray-200 mb-2">📧 support@e-londri.com</p>
-          <p className="text-gray-200">📍 Dhaka, Bangladesh</p>
+          <ul className="space-y-2 text-gray-200">
+            <li>
+              <a href="tel:+8801XXXXXXXXX" className="hover:text-gray-300 flex items-center">
+                <Phone size={16} /> <span className="ml-2">+880 1XXXXXXXXX</span>
+              </a>
+            </li>
+            <li>
+              <a href="mailto:info@elaundry.com" className="hover:text-gray-300 flex items-center">
+                <Mail size={16} /> <span className="ml-2">info@elaundry.com</span>
+              </a>
+            </li>
+            <li>
+              <span className="flex items-center">
+                <MapPin size={16} /> <span className="ml-2">Dhaka, Bangladesh</span>
+              </span>
+            </li>
+          </ul>
 
           {/* Social icons */}
           <div className="flex space-x-4 mt-4">
@@ -82,9 +97,11 @@ export default function Footer() {
               <Facebook />
             </a>
             <a href="#" className="hover:text-gray-300">
+              <Twitter />
+            </a>
+            <a href="#" className="hover:text-gray-300">
               <Instagram />
             </a>
-
             <a href="#" className="hover:text-gray-300">
               <Linkedin />
             </a>
@@ -93,7 +110,9 @@ export default function Footer() {
       </div>
 
       <div className="bg-blue-700 text-center py-4 text-gray-300">
-        &copy; {new Date().getFullYear()} E-Londri. All rights reserved.
+        &copy; {new Date().getFullYear()} eLaundry. All rights reserved. A Product of <span className="font-bold text-white">
+          <Link href="https://orbgenix.com" target="_blank">OrbGenix</Link>
+          </span>.
       </div>
     </footer>
   );
