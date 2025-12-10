@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import OrderForm from "@/components/shared/OrderForm";
 import Footer from "@/components/shared/Footer";
+import Link from "next/link";
 
 // Sample user data and orders
 const userData = {
@@ -39,9 +40,12 @@ export default function ProfilePage() {
     <div className=" bg-linear-to-br from-blue-100 via-white to-orange-100 p-6">
       {/* Navbar */}
       <nav className="flex items-center justify-between px-10 py-4 backdrop-blur-xl bg-white/60 rounded-xl shadow-md">
-        <div className="text-2xl font-bold flex items-center gap-2 text-blue-900">
+        <Link
+          href={"/"}
+          className="text-2xl font-bold flex items-center gap-2 text-blue-900"
+        >
           E-Londri <span className="text-3xl">🌀</span>
-        </div>
+        </Link>
 
         <div className="hidden md:flex items-center gap-8 text-gray-700">
           <span className="hover:text-black cursor-pointer">Services</span>
