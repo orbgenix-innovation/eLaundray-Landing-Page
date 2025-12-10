@@ -99,18 +99,18 @@ export default function Home() {
               key={current} // Smooth fade animation
               src={shirts[current]}
               alt="clean shirt"
-              width={550}
-              height={550}
+              width={1000}
+              height={1000}
               priority
-              className="drop-shadow-lg rounded-xl animate-fade"
+              className="drop-shadow-lg object-contain  animate-fade"
             />
           </div>
 
-          <p className="absolute -left-6 top-10 text-sm font-medium text-gray-700 bg-white/60 px-3 py-2 rounded-lg shadow">
+          <p className="absolute -left-6 top-10 text-sm w-[200px] font-medium text-gray-700 bg-white/60 px-3 py-2 rounded-lg shadow">
             Tough stains? We’ll make your clothes flawless! ✨
           </p>
 
-          <p className="absolute right-0 top-32 text-sm font-medium text-gray-700 bg-white/60 px-3 py-2 rounded-lg shadow">
+          <p className="absolute w-[200px] right-0 top-32 text-sm font-medium text-gray-700 bg-white/60 px-3 py-2 rounded-lg shadow">
             We&apos;ll Handle Any Stain — Guaranteed Removal 🧼
           </p>
         </div>
